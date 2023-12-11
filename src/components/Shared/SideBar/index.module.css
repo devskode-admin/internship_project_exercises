@@ -1,0 +1,46 @@
+.containerSideBar {
+  padding: 1.3em;
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+  height: 100vh;
+  background-color: white;
+  z-index: 1;
+  width: 22%;
+}
+
+.title {
+  color: #6b6b6b;
+  font-weight: bold;
+  font-size: 1.22em;
+}
+
+.subtitle {
+  margin-top: 4em;
+  color: #656ed3;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.list {
+  margin-top: 1.3em;
+  color: #aeaeae;
+}
+
+.list li {
+  margin-bottom: 0.75em;
+  margin-left: 1em;
+  display: flex;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.list li:hover {
+  color: #656ed3;
+}
+
+.list li a {
+  margin-left: 1em;
+}
+
+.marked {
+  color: #656ed3;
+}

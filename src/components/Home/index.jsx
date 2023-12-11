@@ -1,7 +1,11 @@
+import { Button } from '@mui/material';
+
 const Home = () => {
   return (
-    <div>
-      <h1>Home section</h1>
+    <div className="flex justify-center items-center h-screen">
+      <Button variant="contained" size="large" href="/technologies">
+        Home section
+      </Button>
     </div>
   );
 };
