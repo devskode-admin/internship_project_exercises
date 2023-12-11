@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from '../components/Home/index.jsx';
 import Professionals from '../components/Professionals/index.jsx';
 import Technologies from '../components/Technologies/index.jsx';
+import TechnologiesClass from '../components/TechnologiesClass/index.jsx';
 
 const RoutesConfig = () => {
   return (
@@ -9,6 +10,7 @@ const RoutesConfig = () => {
       <Route exact path="/" element={<Home />} />
       <Route exact path="/human-resources" element={<Professionals />} />
       <Route exact path="/technologies" element={<Technologies />} />
+      <Route exact path="/technologies-class" element={<TechnologiesClass />} />
     </Routes>
   );
 };
