@@ -1,8 +1,9 @@
 import { Button } from '@mui/material';
+import styles from './index.module.css';
 
 const Home = () => {
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className={styles.container}>
       <Button variant="contained" size="large" href="/technologies">
         Home section
       </Button>
