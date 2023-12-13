@@ -13,14 +13,21 @@ const SideBar = () => {
   return (
     <div className={styles.containerSideBar}>
       <h2 className={styles.title}>INTERNSHIP PROJECT</h2>
-      <h3 className={styles.subtitle}>HUMAN RESOURCES</h3>
+      <h3 className={styles.subtitle}>RESOURCES</h3>
       <ul className={styles.list}>
         <li
-          onClick={() => goRoute('/human-resources')}
-          className={`${location.pathname === '/human-resources' ? styles.marked : ''}`}
+          onClick={() => goRoute('/professionals')}
+          className={`${location.pathname === '/professionals' ? styles.marked : ''}`}
         >
           <Person />
           <a>Professionals</a>
+        </li>
+        <li
+          onClick={() => goRoute('/professionals-class')}
+          className={`${location.pathname === '/professionals-class' ? styles.marked : ''}`}
+        >
+          <Apps />
+          <a>Professionals Class</a>
         </li>
         <li
           onClick={() => goRoute('/technologies')}

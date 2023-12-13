@@ -19,7 +19,7 @@ class TechnologiesClass extends Component {
       <div className={styles.generalContainer}>
         <SideBar />
         <div className={styles.mainContainer}>
-          <h1>Technologies</h1>
+          <h1>Technologies List</h1>
           <Table sx={{ minWidth: 650 }} className={styles.table} aria-label="simple table">
             <TableHead>
               <TableRow>
