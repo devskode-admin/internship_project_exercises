@@ -1,0 +1,40 @@
+.modalContainer {
+  background-color: #00000033;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 999;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.container {
+  background-color: #fff;
+  padding: 3em;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container p {
+  font-size: 1.5em;
+  text-align: center;
+  color: #152c70;
+  width: 10em;
+  margin: 1em 0;
+}
+
+.mainIcon {
+  height: 6em;
+  width: 6em;
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 14em;
+}

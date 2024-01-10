@@ -6,7 +6,7 @@ const initialState = {
   error: false,
 };
 
-export const getProfessionals = createAsyncThunk('technology/getProfessionals', async () => {
+export const getProfessionals = createAsyncThunk('professionals/getProfessionals', async () => {
   const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
   const response = await fetch(`${apiUrl}/professionals`, {
     method: 'GET',

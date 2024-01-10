@@ -1,6 +1,6 @@
 import styles from './index.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Person, Cable, Apps } from '@mui/icons-material';
+import { Person, Cable } from '@mui/icons-material';
 
 const SideBar = () => {
   const location = useLocation();
@@ -23,25 +23,11 @@ const SideBar = () => {
           <a>Professionals</a>
         </li>
         <li
-          onClick={() => goRoute('/professionals-class')}
-          className={`${location.pathname === '/professionals-class' ? styles.marked : ''}`}
-        >
-          <Apps />
-          <a>Professionals Class</a>
-        </li>
-        <li
           onClick={() => goRoute('/technologies')}
           className={`${location.pathname === '/technologies' ? styles.marked : ''}`}
         >
           <Cable />
           <a>Technologies</a>
-        </li>
-        <li
-          onClick={() => goRoute('/technologies-class')}
-          className={`${location.pathname === '/technologies-class' ? styles.marked : ''}`}
-        >
-          <Apps />
-          <a>Technologies Class</a>
         </li>
       </ul>
     </div>

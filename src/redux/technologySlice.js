@@ -21,6 +21,22 @@ export const getTechnologies = createAsyncThunk('technology/getTechnologies', as
   return data;
 });
 
+export const deleteTechnology = createAsyncThunk('technology/deleteTechnology', async (payload) => {
+  const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+  const response = await fetch(`${apiUrl}/technologies/${payload}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  if (data.error) {
+    throw new Error(data.message);
+  } else {
+    return data;
+  }
+});
+
 const technologySlice = createSlice({
   name: 'technologies',
   initialState,
@@ -36,6 +52,17 @@ const technologySlice = createSlice({
         state.list = action.payload.data;
       })
       .addCase(getTechnologies.rejected, (state, action) => {
+        state.isPending = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteTechnology.pending, (state) => {
+        state.isPending = true;
+      })
+      .addCase(deleteTechnology.fulfilled, (state) => {
+        state.isPending = false;
+        state.error = false;
+      })
+      .addCase(deleteTechnology.rejected, (state, action) => {
         state.isPending = false;
         state.error = action.error.message;
       });
