@@ -6,7 +6,7 @@ const initialState = {
   error: false,
 };
 
-export const getProfessionals = createAsyncThunk('technology/getProfessionals', async () => {
+export const getProfessionals = createAsyncThunk('professionals/getProfessionals', async () => {
   const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
   const response = await fetch(`${apiUrl}/professionals`, {
     method: 'GET',
@@ -20,6 +20,29 @@ export const getProfessionals = createAsyncThunk('technology/getProfessionals', 
   }
   return data;
 });
+
+export const deleteProfessional = createAsyncThunk(
+  'professionals/deleteProfessional',
+  async (payload) => {
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+    const response = await fetch(`${apiUrl}/professionals/${payload}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.message);
+    } else {
+      const obj = {
+        _id: payload,
+        data,
+      };
+      return obj;
+    }
+  },
+);
 
 const professionalSlice = createSlice({
   name: 'professionals',
@@ -36,6 +59,19 @@ const professionalSlice = createSlice({
         state.list = action.payload.data;
       })
       .addCase(getProfessionals.rejected, (state, action) => {
+        state.isPending = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteProfessional.pending, (state) => {
+        state.isPending = true;
+      })
+      .addCase(deleteProfessional.fulfilled, (state, action) => {
+        const filteredProfessionals = state.list.filter((prof) => prof._id != action.payload._id);
+        state.isPending = false;
+        state.error = false;
+        state.list = filteredProfessionals;
+      })
+      .addCase(deleteProfessional.rejected, (state, action) => {
         state.isPending = false;
         state.error = action.error.message;
       });
