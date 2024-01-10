@@ -36,13 +36,6 @@ const SideBar = () => {
           <Cable />
           <a>Technologies</a>
         </li>
-        <li
-          onClick={() => goRoute('/technologies-class')}
-          className={`${location.pathname === '/technologies-class' ? styles.marked : ''}`}
-        >
-          <Apps />
-          <a>Technologies Class</a>
-        </li>
       </ul>
     </div>
   );
