@@ -9,6 +9,7 @@ import {
   Snackbar,
   Alert,
   TableContainer,
+  Button,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -17,6 +18,7 @@ import SideBar from '../Shared/SideBar/index.jsx';
 import { getTechnologies, deleteTechnology } from '../../redux/technologySlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '../Shared/Modal/index.jsx';
+import FormModal from './formTech/form.jsx';
 
 const Technologies = () => {
   const dispatch = useDispatch();
@@ -28,6 +30,7 @@ const Technologies = () => {
     message: '',
     type: 'success',
   });
+  const [openFormModal, setOpenFormModal] = useState(false);
 
   useEffect(() => {
     dispatch(getTechnologies());
@@ -62,8 +65,14 @@ const Technologies = () => {
     }
   };
 
+  const openForm = () => {
+    setIdState('');
+    setOpenFormModal(true);
+  };
+
   return (
     <div className={styles.generalContainer}>
+      <FormModal isOpen={openFormModal} action={() => setOpenFormModal(false)} />
       <Modal
         isOpen={openDeleteModal}
         actionDelete={() => deleteItem()}
@@ -76,7 +85,12 @@ const Technologies = () => {
       </Snackbar>
       <SideBar />
       <div className={styles.mainContainer}>
-        <h1>Technologies List</h1>
+        <div className={styles.headerContainer}>
+          <h1>Technologies List</h1>
+          <Button aria-label="add" size="small" variant="contained" onClick={openForm}>
+            Create Technology
+          </Button>
+        </div>
         <TableContainer sx={{ maxHeight: 665 }} className={styles.table}>
           <Table stickyHeader aria-label="simple table">
             <TableHead>
