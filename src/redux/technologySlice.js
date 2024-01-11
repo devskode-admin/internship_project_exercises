@@ -33,12 +33,24 @@ export const deleteTechnology = createAsyncThunk('technology/deleteTechnology', 
   if (data.error) {
     throw new Error(data.message);
   } else {
-    const obj = {
-      _id: payload,
-      data,
-    };
-    return obj;
+    return data;
   }
+});
+
+export const createTechnology = createAsyncThunk('technology/createTechnology', async (payload) => {
+  const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+  const response = await fetch(`${apiUrl}/technologies`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json();
+  if (data.error) {
+    throw new Error(data.message);
+  }
+  return data;
 });
 
 const technologySlice = createSlice({
@@ -62,13 +74,22 @@ const technologySlice = createSlice({
       .addCase(deleteTechnology.pending, (state) => {
         state.isPending = true;
       })
-      .addCase(deleteTechnology.fulfilled, (state, action) => {
-        const filteredTechnologies = state.list.filter((tech) => tech._id != action.payload._id);
+      .addCase(deleteTechnology.fulfilled, (state) => {
         state.isPending = false;
         state.error = false;
-        state.list = filteredTechnologies;
       })
       .addCase(deleteTechnology.rejected, (state, action) => {
+        state.isPending = false;
+        state.error = action.error.message;
+      })
+      .addCase(createTechnology.pending, (state) => {
+        state.isPending = true;
+      })
+      .addCase(createTechnology.fulfilled, (state) => {
+        state.isPending = false;
+        state.error = false;
+      })
+      .addCase(createTechnology.rejected, (state, action) => {
         state.isPending = false;
         state.error = action.error.message;
       });

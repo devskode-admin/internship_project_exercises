@@ -35,11 +35,7 @@ export const deleteProfessional = createAsyncThunk(
     if (data.error) {
       throw new Error(data.message);
     } else {
-      const obj = {
-        _id: payload,
-        data,
-      };
-      return obj;
+      return data;
     }
   },
 );
@@ -65,11 +61,9 @@ const professionalSlice = createSlice({
       .addCase(deleteProfessional.pending, (state) => {
         state.isPending = true;
       })
-      .addCase(deleteProfessional.fulfilled, (state, action) => {
-        const filteredProfessionals = state.list.filter((prof) => prof._id != action.payload._id);
+      .addCase(deleteProfessional.fulfilled, (state) => {
         state.isPending = false;
         state.error = false;
-        state.list = filteredProfessionals;
       })
       .addCase(deleteProfessional.rejected, (state, action) => {
         state.isPending = false;

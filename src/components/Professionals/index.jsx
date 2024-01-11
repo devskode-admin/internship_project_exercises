@@ -1,79 +1,50 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
+import styles from './index.module.css';
 import {
   Table,
   TableHead,
   TableBody,
   TableRow,
   TableCell,
-  TableContainer,
   IconButton,
-  Snackbar,
-  Alert,
+  TableContainer,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
-import styles from './index.module.css';
-import SideBar from '../Shared/SideBar/index.jsx';
-import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
-import { useDispatch, useSelector } from 'react-redux';
-import Modal from '../Shared/Modal/index.jsx';
+import SideBar from '../Shared/SideBar';
+import ConfirmModal from '../Shared/ConfirmModal';
 
 const Professionals = () => {
   const dispatch = useDispatch();
   const professionalsList = useSelector((state) => state.professionals.list);
-  const [idState, setIdState] = useState('');
+  const [itemId, setItemId] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    message: '',
-    type: 'success',
-  });
 
   useEffect(() => {
     dispatch(getProfessionals());
   }, []);
 
-  const closeAlert = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlert({
-      isOpen: false,
-      message: alert.message,
-      type: alert.type,
-    });
-  };
-
   const deleteItem = async () => {
-    const response = await dispatch(deleteProfessional(idState));
+    const response = await dispatch(deleteProfessional(itemId));
     setOpenDeleteModal(false);
     if (response.error) {
-      setAlert({
-        isOpen: true,
-        message: response.error.message,
-        type: 'error',
-      });
+      alert(response.error.message);
     } else {
-      setAlert({
-        isOpen: true,
-        message: response.payload.data.message,
-        type: 'success',
-      });
+      dispatch(getProfessionals());
     }
   };
 
   return (
     <div className={styles.generalContainer}>
-      <Modal
-        isOpen={openDeleteModal}
-        actionDelete={() => deleteItem()}
-        close={() => setOpenDeleteModal(false)}
-      />
-      <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={closeAlert}>
-        <Alert onClose={closeAlert} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      {openDeleteModal && (
+        <ConfirmModal
+          type="Delete"
+          action={() => deleteItem()}
+          close={() => setOpenDeleteModal(false)}
+        />
+      )}
       <SideBar />
       <div className={styles.mainContainer}>
         <h1>Professionals List</h1>
@@ -86,7 +57,6 @@ const Professionals = () => {
                 <TableCell sx={{ color: '#334d6e88' }}>Email</TableCell>
                 <TableCell sx={{ color: '#334d6e88' }}>Role</TableCell>
                 <TableCell sx={{ color: '#334d6e88' }}>Module</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -103,7 +73,7 @@ const Professionals = () => {
                     <IconButton
                       aria-label="delete"
                       onClick={() => {
-                        setIdState(row._id);
+                        setItemId(row._id);
                         setOpenDeleteModal(true);
                       }}
                     >
