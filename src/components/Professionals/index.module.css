@@ -20,6 +20,12 @@
   color: #334d6e88;
 }
 
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .table {
   background-color: #fff;
   margin-top: 1em;

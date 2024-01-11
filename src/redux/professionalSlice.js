@@ -44,6 +44,25 @@ export const deleteProfessional = createAsyncThunk(
   },
 );
 
+export const createProfessional = createAsyncThunk(
+  'professionals/createProfessional',
+  async (payload) => {
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+    const response = await fetch(`${apiUrl}/professionals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.message);
+    }
+    return data;
+  },
+);
+
 const professionalSlice = createSlice({
   name: 'professionals',
   initialState,
@@ -72,6 +91,18 @@ const professionalSlice = createSlice({
         state.list = filteredProfessionals;
       })
       .addCase(deleteProfessional.rejected, (state, action) => {
+        state.isPending = false;
+        state.error = action.error.message;
+      })
+      .addCase(createProfessional.pending, (state) => {
+        state.isPending = true;
+      })
+      .addCase(createProfessional.fulfilled, (state, action) => {
+        state.isPending = false;
+        state.error = false;
+        state.list = [...state.list, action.payload.data];
+      })
+      .addCase(createProfessional.rejected, (state, action) => {
         state.isPending = false;
         state.error = action.error.message;
       });

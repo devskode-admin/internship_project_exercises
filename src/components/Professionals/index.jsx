@@ -9,6 +9,7 @@ import {
   IconButton,
   Snackbar,
   Alert,
+  Button,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
@@ -17,6 +18,7 @@ import SideBar from '../Shared/SideBar/index.jsx';
 import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '../Shared/Modal/index.jsx';
+import FormModal from './formProfessional/form.jsx';
 
 const Professionals = () => {
   const dispatch = useDispatch();
@@ -28,6 +30,7 @@ const Professionals = () => {
     message: '',
     type: 'success',
   });
+  const [openFormModal, setOpenFormModal] = useState(false);
 
   useEffect(() => {
     dispatch(getProfessionals());
@@ -62,8 +65,14 @@ const Professionals = () => {
     }
   };
 
+  const openForm = () => {
+    setIdState('');
+    setOpenFormModal(true);
+  };
+
   return (
     <div className={styles.generalContainer}>
+      <FormModal isOpen={openFormModal} action={() => setOpenFormModal(false)} />
       <Modal
         isOpen={openDeleteModal}
         actionDelete={() => deleteItem()}
@@ -76,7 +85,12 @@ const Professionals = () => {
       </Snackbar>
       <SideBar />
       <div className={styles.mainContainer}>
-        <h1>Professionals List</h1>
+        <div className={styles.headerContainer}>
+          <h1>Professionals List</h1>
+          <Button aria-label="add" size="small" variant="contained" onClick={openForm}>
+            Create Professional
+          </Button>
+        </div>
         <TableContainer sx={{ maxHeight: 665 }} className={styles.table}>
           <Table stickyHeader aria-label="simple table">
             <TableHead>
