@@ -1,64 +1,39 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { TextField, Button, MenuItem, Snackbar, Alert, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import styles from './form.module.css';
-import { useEffect, useState } from 'react';
-import { createProfessional } from '../../../redux/professionalSlice.js';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { createProfessional } from '../../../redux/professionalSlice.js';
+import styles from './form.module.css';
+import { TextField, Button, MenuItem, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 
-const FormModal = ({ isOpen, action }) => {
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    message: '',
-    type: 'success',
-  });
+const FormModal = ({ handleCloseForm }) => {
   const dispatch = useDispatch();
-  const { register, reset, handleSubmit } = useForm({ mode: 'onChange' });
+  const { register, reset, handleSubmit } = useForm();
 
   useEffect(() => {
     reset();
-  }, [action]);
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlert({
-      isOpen: false,
-      message: alert.message,
-      type: alert.type,
-    });
-  };
+  }, []);
 
   const onSubmit = async (data) => {
     const response = await dispatch(createProfessional(data));
     if (response.error) {
-      setAlert({
-        isOpen: true,
-        message: response.error.message,
-        type: 'error',
-      });
+      alert(response.error.message);
     } else {
       reset();
-      action();
+      handleCloseForm();
     }
   };
 
-  return isOpen ? (
+  return (
     <div className={styles.modalContainer}>
-      <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
       <div className={styles.wrapper}>
         <div className={styles.closeIcon}>
           <IconButton
             aria-label="cancel"
             onClick={() => {
-              action();
+              handleCloseForm();
               reset();
             }}
           >
@@ -94,16 +69,14 @@ const FormModal = ({ isOpen, action }) => {
             <div>
               <TextField fullWidth select label="Role" name="role" {...register('role')}>
                 <MenuItem value="Director">Director</MenuItem>
-                <MenuItem value="Manager">Manager</MenuItem>
+                <MenuItem value="Area Manager">Manager</MenuItem>
                 <MenuItem value="Developer">Developer</MenuItem>
-                <MenuItem value="QA">QA</MenuItem>
               </TextField>
             </div>
             <div>
               <TextField fullWidth select label="Module" name="module" {...register('module')}>
-                <MenuItem value="Management">Management</MenuItem>
                 <MenuItem value="Human Resources">Human Resources</MenuItem>
-                <MenuItem value="Course">Course</MenuItem>
+                <MenuItem value="Full Stack Course">Course</MenuItem>
                 <MenuItem value="Internship">Internship</MenuItem>
                 <MenuItem value="Interview">Interview</MenuItem>
                 <MenuItem value="Onboarding">Onboarding</MenuItem>
@@ -119,8 +92,6 @@ const FormModal = ({ isOpen, action }) => {
         </form>
       </div>
     </div>
-  ) : (
-    <></>
   );
 };
 

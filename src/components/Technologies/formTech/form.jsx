@@ -1,75 +1,84 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { TextField, Button, MenuItem, Snackbar, Alert, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import styles from './form.module.css';
-import { useEffect, useState } from 'react';
-import { createTechnology } from '../../../redux/technologySlice';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { createTechnology, editTechnology } from '../../../redux/technologySlice';
+import styles from './form.module.css';
+import { TextField, Button, MenuItem, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
+import technologySchema from '../../../validations/technologies.js';
+import { joiResolver } from '@hookform/resolvers/joi';
 
-const FormModal = ({ isOpen, action }) => {
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    message: '',
-    type: 'success',
-  });
+const FormModal = ({ handleCloseForm, technologyParam }) => {
   const dispatch = useDispatch();
-  const { register, reset, handleSubmit } = useForm({ mode: 'onChange' });
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({ mode: 'onChange', resolver: joiResolver(technologySchema) });
 
   useEffect(() => {
-    reset();
-  }, [action]);
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlert({
-      isOpen: false,
-      message: alert.message,
-      type: alert.type,
-    });
-  };
-
-  const onSubmit = async (data) => {
-    const response = await dispatch(createTechnology(data));
-    if (response.error) {
-      setAlert({
-        isOpen: true,
-        message: response.error.message,
-        type: 'error',
-      });
+    if (technologyParam) {
+      setValue('name', technologyParam?.name);
+      setValue('development_side', technologyParam?.development_side);
     } else {
       reset();
-      action();
+    }
+  }, [technologyParam]);
+
+  const onSubmit = async (data) => {
+    if (technologyParam) {
+      const payload = {
+        _id: technologyParam._id,
+        body: data,
+      };
+      const response = await dispatch(editTechnology(payload));
+      if (response.error) {
+        alert(response.error.message);
+      } else {
+        reset();
+        handleCloseForm();
+      }
+    } else {
+      const response = await dispatch(createTechnology(data));
+      if (response.error) {
+        alert(response.error.message);
+      } else {
+        reset();
+        handleCloseForm();
+      }
     }
   };
 
-  return isOpen ? (
+  return (
     <div className={styles.modalContainer}>
-      <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
       <div className={styles.wrapper}>
         <div className={styles.closeIcon}>
           <IconButton
             aria-label="cancel"
             onClick={() => {
-              action();
               reset();
+              handleCloseForm();
             }}
           >
             <Close />
           </IconButton>
         </div>
-        <h2 className={styles.title}>{'Add Technology'}</h2>
+        <h2 className={styles.title}>{technologyParam ? 'Edit Technology' : 'Add Technology'}</h2>
         <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.inputsContainer}>
             <div>
-              <TextField fullWidth label="Name" name="name" {...register('name')} />
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                {...register('name')}
+                error={!!errors.name}
+              />
+              <p className={styles.helperText}>{errors.name ? errors.name.message : ''}</p>
             </div>
             <div>
               <TextField
@@ -77,24 +86,27 @@ const FormModal = ({ isOpen, action }) => {
                 select
                 label="Development Side"
                 name="development_side"
+                defaultValue={technologyParam ? technologyParam?.development_side : ''}
                 {...register('development_side')}
+                error={!!errors.development_side}
               >
                 <MenuItem value="Backend">Backend</MenuItem>
                 <MenuItem value="Frontend">Frontend</MenuItem>
                 <MenuItem value="Fullstack">Fullstack</MenuItem>
               </TextField>
+              <p className={styles.helperText}>
+                {errors.development_side ? errors.development_side.message : ''}
+              </p>
             </div>
           </div>
           <div className={styles.buttonCreateContainer}>
             <Button size="large" sx={{ width: 230, height: 45 }} type="submit" variant="contained">
-              {'Create'}
+              {technologyParam ? 'Edit' : 'Create'}
             </Button>
           </div>
         </form>
       </div>
     </div>
-  ) : (
-    <></>
   );
 };
 
