@@ -11,7 +11,7 @@ import {
   TableContainer,
   Button,
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Close, Edit } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import styles from './index.module.css';
 import SideBar from '../Shared/SideBar/index.jsx';
@@ -72,7 +72,11 @@ const Technologies = () => {
 
   return (
     <div className={styles.generalContainer}>
-      <FormModal isOpen={openFormModal} action={() => setOpenFormModal(false)} />
+      <FormModal
+        isOpen={openFormModal}
+        technolgyParam={idState}
+        action={() => setOpenFormModal(false)}
+      />
       <Modal
         isOpen={openDeleteModal}
         actionDelete={() => deleteItem()}
@@ -108,6 +112,21 @@ const Technologies = () => {
                   </TableCell>
                   <TableCell>{row.development_side}</TableCell>
                   <TableCell sx={{ paddingTop: 0, paddingBottom: 0 }}>
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => {
+                        setIdState(row);
+                        setOpenFormModal(true);
+                      }}
+                    >
+                      <Edit
+                        sx={{
+                          color: '#656ED3',
+                          border: '2px solid #656ED3',
+                          borderRadius: '5px',
+                        }}
+                      />
+                    </IconButton>
                     <IconButton
                       aria-label="delete"
                       onClick={() => {

@@ -4,22 +4,35 @@ import { TextField, Button, MenuItem, Snackbar, Alert, IconButton } from '@mui/m
 import { Close } from '@mui/icons-material';
 import styles from './form.module.css';
 import { useEffect, useState } from 'react';
-import { createTechnology } from '../../../redux/technologySlice';
+import { createTechnology, editTechnology } from '../../../redux/technologySlice';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import technologySchema from '../../../validations/technologies.js';
+import { joiResolver } from '@hookform/resolvers/joi';
 
-const FormModal = ({ isOpen, action }) => {
+const FormModal = ({ isOpen, action, technolgyParam }) => {
   const [alert, setAlert] = useState({
     isOpen: false,
     message: '',
     type: 'success',
   });
   const dispatch = useDispatch();
-  const { register, reset, handleSubmit } = useForm({ mode: 'onChange' });
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({ mode: 'onChange', resolver: joiResolver(technologySchema) });
 
   useEffect(() => {
-    reset();
-  }, [action]);
+    if (technolgyParam) {
+      setValue('name', technolgyParam?.name);
+      setValue('development_side', technolgyParam?.development_side);
+    } else {
+      reset();
+    }
+  }, [action, technolgyParam]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -33,16 +46,34 @@ const FormModal = ({ isOpen, action }) => {
   };
 
   const onSubmit = async (data) => {
-    const response = await dispatch(createTechnology(data));
-    if (response.error) {
-      setAlert({
-        isOpen: true,
-        message: response.error.message,
-        type: 'error',
-      });
+    if (technolgyParam) {
+      const payload = {
+        _id: technolgyParam._id,
+        body: data,
+      };
+      const response = await dispatch(editTechnology(payload));
+      if (response.error) {
+        setAlert({
+          isOpen: true,
+          message: response.error.message,
+          type: 'error',
+        });
+      } else {
+        reset();
+        action();
+      }
     } else {
-      reset();
-      action();
+      const response = await dispatch(createTechnology(data));
+      if (response.error) {
+        setAlert({
+          isOpen: true,
+          message: response.error.message,
+          type: 'error',
+        });
+      } else {
+        reset();
+        action();
+      }
     }
   };
 
@@ -58,18 +89,25 @@ const FormModal = ({ isOpen, action }) => {
           <IconButton
             aria-label="cancel"
             onClick={() => {
-              action();
               reset();
+              action();
             }}
           >
             <Close />
           </IconButton>
         </div>
-        <h2 className={styles.title}>{'Add Technology'}</h2>
+        <h2 className={styles.title}>{technolgyParam ? 'Edit Technology' : 'Add Technology'}</h2>
         <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.inputsContainer}>
             <div>
-              <TextField fullWidth label="Name" name="name" {...register('name')} />
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                {...register('name')}
+                error={!!errors.name}
+              />
+              <p className={styles.helperText}>{errors.name ? errors.name.message : ''}</p>
             </div>
             <div>
               <TextField
@@ -77,17 +115,22 @@ const FormModal = ({ isOpen, action }) => {
                 select
                 label="Development Side"
                 name="development_side"
+                defaultValue={technolgyParam ? technolgyParam?.development_side : ''}
                 {...register('development_side')}
+                error={!!errors.development_side}
               >
                 <MenuItem value="Backend">Backend</MenuItem>
                 <MenuItem value="Frontend">Frontend</MenuItem>
                 <MenuItem value="Fullstack">Fullstack</MenuItem>
               </TextField>
+              <p className={styles.helperText}>
+                {errors.development_side ? errors.development_side.message : ''}
+              </p>
             </div>
           </div>
           <div className={styles.buttonCreateContainer}>
             <Button size="large" sx={{ width: 230, height: 45 }} type="submit" variant="contained">
-              {'Create'}
+              {technolgyParam ? 'Edit' : 'Create'}
             </Button>
           </div>
         </form>
