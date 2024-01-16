@@ -3,26 +3,26 @@ import { store } from '../../../redux/store.js';
 import { Provider } from 'react-redux';
 import { describe, expect, test } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Technologies from '../index.jsx';
-import FormModal from '../formTech/form.jsx';
+import Professional from '../index.jsx';
+import FormModal from '../formProfessional/form.jsx';
 
-describe('Technologies tests', () => {
+describe('Professional tests', () => {
   test('It should have the main H1', () => {
     render(
       <Provider store={store}>
         <Router>
-          <Technologies></Technologies>
+          <Professional></Professional>
         </Router>
       </Provider>,
     );
-    const title = screen.getByRole('heading', { name: 'Technologies List' });
+    const title = screen.getByRole('heading', { name: 'Professionals List' });
     expect(title).toBeDefined();
   });
   test('It should have the main table', async () => {
     render(
       <Provider store={store}>
         <Router>
-          <Technologies></Technologies>
+          <Professional></Professional>
         </Router>
       </Provider>,
     );
@@ -33,7 +33,7 @@ describe('Technologies tests', () => {
     render(
       <Provider store={store}>
         <Router>
-          <Technologies></Technologies>
+          <Professional></Professional>
         </Router>
       </Provider>,
     );
@@ -44,7 +44,7 @@ describe('Technologies tests', () => {
     render(
       <Provider store={store}>
         <Router>
-          <Technologies></Technologies>
+          <Professional></Professional>
         </Router>
       </Provider>,
     );
@@ -57,16 +57,16 @@ describe('Technologies tests', () => {
     render(
       <Provider store={store}>
         <Router>
-          <Technologies>
+          <Professional>
             <FormModal isOpen={false}></FormModal>
-          </Technologies>
+          </Professional>
         </Router>
       </Provider>,
     );
     const createButton = screen.getByRole('button', { name: 'add' });
     fireEvent.click(createButton);
 
-    const formTitle = screen.getByText('Add Technology');
+    const formTitle = screen.getByText('Add Professional');
     const formButton = screen.getByText('Create');
 
     expect(formTitle).toBeDefined();
@@ -76,9 +76,9 @@ describe('Technologies tests', () => {
     render(
       <Provider store={store}>
         <Router>
-          <Technologies>
+          <Professional>
             <FormModal isOpen={false}></FormModal>
-          </Technologies>
+          </Professional>
         </Router>
       </Provider>,
     );
@@ -86,11 +86,17 @@ describe('Technologies tests', () => {
       const rows = screen.getAllByLabelText('edit', { selector: 'button' });
       fireEvent.click(rows[0]);
 
-      const nameField = screen.getByLabelText('Name');
-      const devSideField = screen.getByLabelText('Development Side');
+      const firstNameField = screen.getByLabelText('First Name');
+      const lastNameField = screen.getByLabelText('Last Name');
+      const emailField = screen.getByLabelText('Email');
+      const roleField = screen.getByLabelText('Role');
+      const moduleField = screen.getByLabelText('Module');
 
-      expect(nameField.value).toBe('Node.js');
-      expect(devSideField.textContent).toBe('Backend');
+      expect(firstNameField.value).toBe('Galo');
+      expect(lastNameField.value).toBe('Durante');
+      expect(emailField.value).toBe('galo@devskode.com');
+      expect(roleField.textContent).toBe('Director');
+      expect(moduleField.textContent).toBe('Internship');
     });
   });
 });

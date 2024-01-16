@@ -24,6 +24,7 @@ const Professionals = () => {
   const dispatch = useDispatch();
   const professionalsList = useSelector((state) => state.professionals.list);
   const [idState, setIdState] = useState('');
+  const [professionalState, setProfessionalState] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [alert, setAlert] = useState({
     isOpen: false,
@@ -66,7 +67,7 @@ const Professionals = () => {
   };
 
   const openForm = () => {
-    setIdState('');
+    setProfessionalState('');
     setOpenFormModal(true);
   };
 
@@ -74,8 +75,8 @@ const Professionals = () => {
     <div className={styles.generalContainer}>
       <FormModal
         isOpen={openFormModal}
-        professionalParam={idState}
-        action={() => setOpenFormModal(false)}
+        professionalParam={professionalState}
+        handleCloseForm={() => setOpenFormModal(false)}
       />
       <Modal
         isOpen={openDeleteModal}
@@ -121,7 +122,7 @@ const Professionals = () => {
                     <IconButton
                       aria-label="edit"
                       onClick={() => {
-                        setIdState(row);
+                        setProfessionalState(row);
                         setOpenFormModal(true);
                       }}
                     >

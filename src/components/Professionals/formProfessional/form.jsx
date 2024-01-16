@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import professionalSchema from '../../../validations/professionals.js';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-const FormModal = ({ isOpen, action, professionalParam }) => {
+const FormModal = ({ isOpen, handleCloseForm, professionalParam }) => {
   const [alert, setAlert] = useState({
     isOpen: false,
     message: '',
@@ -64,7 +64,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
         });
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     } else {
       const response = await dispatch(createProfessional(data));
@@ -76,7 +76,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
         });
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     }
   };
@@ -93,7 +93,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
           <IconButton
             aria-label="cancel"
             onClick={() => {
-              action();
+              handleCloseForm();
               reset();
             }}
           >
