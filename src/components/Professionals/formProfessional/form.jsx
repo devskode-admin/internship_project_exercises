@@ -19,7 +19,7 @@ const FormModal = ({ isOpen, action }) => {
 
   useEffect(() => {
     reset();
-  }, [action]);
+  }, [isOpen]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -96,14 +96,12 @@ const FormModal = ({ isOpen, action }) => {
                 <MenuItem value="Director">Director</MenuItem>
                 <MenuItem value="Manager">Manager</MenuItem>
                 <MenuItem value="Developer">Developer</MenuItem>
-                <MenuItem value="QA">QA</MenuItem>
               </TextField>
             </div>
             <div>
               <TextField fullWidth select label="Module" name="module" {...register('module')}>
-                <MenuItem value="Management">Management</MenuItem>
                 <MenuItem value="Human Resources">Human Resources</MenuItem>
-                <MenuItem value="Course">Course</MenuItem>
+                <MenuItem value="Full Stack Course">Course</MenuItem>
                 <MenuItem value="Internship">Internship</MenuItem>
                 <MenuItem value="Interview">Interview</MenuItem>
                 <MenuItem value="Onboarding">Onboarding</MenuItem>

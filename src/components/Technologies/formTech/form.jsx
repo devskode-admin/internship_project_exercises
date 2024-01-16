@@ -32,7 +32,7 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
     } else {
       reset();
     }
-  }, [action, technolgyParam]);
+  }, [isOpen, technolgyParam]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
