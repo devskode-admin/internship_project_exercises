@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import professionalSchema from '../../../validations/professionals.js';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-const FormModal = ({ isOpen, action, professionalParam }) => {
+const FormModal = ({ isOpen, handleCloseForm, professionalParam }) => {
   const [alert, setAlert] = useState({
     isOpen: false,
     message: '',
@@ -36,7 +36,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
     } else {
       reset();
     }
-  }, [action, professionalParam]);
+  }, [isOpen, professionalParam]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -64,7 +64,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
         });
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     } else {
       const response = await dispatch(createProfessional(data));
@@ -76,7 +76,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
         });
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     }
   };
@@ -93,7 +93,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
           <IconButton
             aria-label="cancel"
             onClick={() => {
-              action();
+              handleCloseForm();
               reset();
             }}
           >
@@ -163,7 +163,6 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
                 <MenuItem value="Director">Director</MenuItem>
                 <MenuItem value="Manager">Manager</MenuItem>
                 <MenuItem value="Developer">Developer</MenuItem>
-                <MenuItem value="QA">QA</MenuItem>
               </TextField>
               <p className={styles.helperText}>{errors.role ? errors.role.message : ''}</p>
             </div>
@@ -177,9 +176,8 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
                 {...register('module')}
                 error={!!errors.module}
               >
-                <MenuItem value="Management">Management</MenuItem>
                 <MenuItem value="Human Resources">Human Resources</MenuItem>
-                <MenuItem value="Course">Course</MenuItem>
+                <MenuItem value="Full Stack Course">Course</MenuItem>
                 <MenuItem value="Internship">Internship</MenuItem>
                 <MenuItem value="Interview">Interview</MenuItem>
                 <MenuItem value="Onboarding">Onboarding</MenuItem>
