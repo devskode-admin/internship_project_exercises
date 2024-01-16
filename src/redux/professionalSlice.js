@@ -63,6 +63,25 @@ export const createProfessional = createAsyncThunk(
   },
 );
 
+export const editProfessional = createAsyncThunk(
+  'professional/editProfessional',
+  async (payload) => {
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+    const response = await fetch(`${apiUrl}/professionals/${payload._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload.body),
+    });
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.message);
+    }
+    return data;
+  },
+);
+
 const professionalSlice = createSlice({
   name: 'professionals',
   initialState,
@@ -103,6 +122,20 @@ const professionalSlice = createSlice({
         state.list = [...state.list, action.payload.data];
       })
       .addCase(createProfessional.rejected, (state, action) => {
+        state.isPending = false;
+        state.error = action.error.message;
+      })
+      .addCase(editProfessional.pending, (state) => {
+        state.isPending = true;
+      })
+      .addCase(editProfessional.fulfilled, (state, action) => {
+        state.isPending = false;
+        state.error = false;
+        state.list = state.list.map((tech) =>
+          tech._id === action.payload.data._id ? action.payload.data : tech,
+        );
+      })
+      .addCase(editProfessional.rejected, (state, action) => {
         state.isPending = false;
         state.error = action.error.message;
       });

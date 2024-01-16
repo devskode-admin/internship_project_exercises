@@ -74,7 +74,7 @@ const Technologies = () => {
     <div className={styles.generalContainer}>
       <FormModal
         isOpen={openFormModal}
-        technolgyParam={idState}
+        technologyParam={idState}
         action={() => setOpenFormModal(false)}
       />
       <Modal
