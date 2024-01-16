@@ -1,21 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { TextField, Button, MenuItem, Snackbar, Alert, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import styles from './form.module.css';
-import { useEffect, useState } from 'react';
-import { createProfessional, editProfessional } from '../../../redux/professionalSlice.js';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { createProfessional, editProfessional } from '../../../redux/professionalSlice.js';
+import styles from './form.module.css';
+import { TextField, Button, MenuItem, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import professionalSchema from '../../../validations/professionals.js';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-const FormModal = ({ isOpen, action, professionalParam }) => {
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    message: '',
-    type: 'success',
-  });
+const FormModal = ({ handleCloseForm, professionalParam }) => {
   const dispatch = useDispatch();
   const {
     register,
@@ -36,18 +31,7 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
     } else {
       reset();
     }
-  }, [action, professionalParam]);
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlert({
-      isOpen: false,
-      message: alert.message,
-      type: alert.type,
-    });
-  };
+  }, [professionalParam]);
 
   const onSubmit = async (data) => {
     if (professionalParam) {
@@ -57,43 +41,30 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
       };
       const response = await dispatch(editProfessional(payload));
       if (response.error) {
-        setAlert({
-          isOpen: true,
-          message: response.error.message,
-          type: 'error',
-        });
+        alert(response.error.message);
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     } else {
       const response = await dispatch(createProfessional(data));
       if (response.error) {
-        setAlert({
-          isOpen: true,
-          message: response.error.message,
-          type: 'error',
-        });
+        alert(response.error.message);
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     }
   };
 
-  return isOpen ? (
+  return (
     <div className={styles.modalContainer}>
-      <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
       <div className={styles.wrapper}>
         <div className={styles.closeIcon}>
           <IconButton
             aria-label="cancel"
             onClick={() => {
-              action();
+              handleCloseForm();
               reset();
             }}
           >
@@ -161,9 +132,8 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
                 error={!!errors.role}
               >
                 <MenuItem value="Director">Director</MenuItem>
-                <MenuItem value="Manager">Manager</MenuItem>
+                <MenuItem value="Area Manager">Manager</MenuItem>
                 <MenuItem value="Developer">Developer</MenuItem>
-                <MenuItem value="QA">QA</MenuItem>
               </TextField>
               <p className={styles.helperText}>{errors.role ? errors.role.message : ''}</p>
             </div>
@@ -177,9 +147,8 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
                 {...register('module')}
                 error={!!errors.module}
               >
-                <MenuItem value="Management">Management</MenuItem>
                 <MenuItem value="Human Resources">Human Resources</MenuItem>
-                <MenuItem value="Course">Course</MenuItem>
+                <MenuItem value="Full Stack Course">Course</MenuItem>
                 <MenuItem value="Internship">Internship</MenuItem>
                 <MenuItem value="Interview">Interview</MenuItem>
                 <MenuItem value="Onboarding">Onboarding</MenuItem>
@@ -196,8 +165,6 @@ const FormModal = ({ isOpen, action, professionalParam }) => {
         </form>
       </div>
     </div>
-  ) : (
-    <></>
   );
 };
 

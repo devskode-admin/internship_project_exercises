@@ -1,4 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getTechnologies, deleteTechnology } from '../../redux/technologySlice.js';
+import styles from './index.module.css';
 import {
   Table,
   TableHead,
@@ -6,87 +10,52 @@ import {
   TableRow,
   TableCell,
   IconButton,
-  Snackbar,
-  Alert,
   TableContainer,
   Button,
 } from '@mui/material';
 import { Close, Edit } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
-import styles from './index.module.css';
 import SideBar from '../Shared/SideBar/index.jsx';
-import { getTechnologies, deleteTechnology } from '../../redux/technologySlice.js';
-import { useDispatch, useSelector } from 'react-redux';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formTech/form.jsx';
 
 const Technologies = () => {
   const dispatch = useDispatch();
   const technologiesList = useSelector((state) => state.technologies.list);
-  const [idState, setIdState] = useState('');
+  const [itemId, setItemId] = useState('');
+  const [tech, setTech] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    message: '',
-    type: 'success',
-  });
   const [openFormModal, setOpenFormModal] = useState(false);
 
   useEffect(() => {
     dispatch(getTechnologies());
   }, []);
 
-  const closeAlert = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlert({
-      isOpen: false,
-      message: alert.message,
-      type: alert.type,
-    });
-  };
-
   const deleteItem = async () => {
-    const response = await dispatch(deleteTechnology(idState));
+    const response = await dispatch(deleteTechnology(itemId));
     setOpenDeleteModal(false);
     if (response.error) {
-      setAlert({
-        isOpen: true,
-        message: response.error.message,
-        type: 'error',
-      });
-    } else {
-      setAlert({
-        isOpen: true,
-        message: response.payload.data.message,
-        type: 'success',
-      });
+      alert(response.error.message);
     }
   };
 
   const openForm = () => {
-    setIdState('');
     setOpenFormModal(true);
   };
 
   return (
     <div className={styles.generalContainer}>
-      <FormModal
-        isOpen={openFormModal}
-        technolgyParam={idState}
-        action={() => setOpenFormModal(false)}
-      />
-      <Modal
-        isOpen={openDeleteModal}
-        actionDelete={() => deleteItem()}
-        close={() => setOpenDeleteModal(false)}
-      />
-      <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={closeAlert}>
-        <Alert onClose={closeAlert} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      {openFormModal && (
+        <FormModal
+          technologyParam={tech}
+          handleCloseForm={() => {
+            setTech('');
+            setOpenFormModal(false);
+          }}
+        />
+      )}
+      {openDeleteModal && (
+        <Modal actionDelete={() => deleteItem()} close={() => setOpenDeleteModal(false)} />
+      )}
       <SideBar />
       <div className={styles.mainContainer}>
         <div className={styles.headerContainer}>
@@ -115,7 +84,7 @@ const Technologies = () => {
                     <IconButton
                       aria-label="edit"
                       onClick={() => {
-                        setIdState(row);
+                        setTech(row);
                         setOpenFormModal(true);
                       }}
                     >
@@ -130,7 +99,7 @@ const Technologies = () => {
                     <IconButton
                       aria-label="delete"
                       onClick={() => {
-                        setIdState(row._id);
+                        setItemId(row._id);
                         setOpenDeleteModal(true);
                       }}
                     >
