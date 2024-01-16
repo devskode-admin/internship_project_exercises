@@ -63,21 +63,24 @@ export const createProfessional = createAsyncThunk(
   },
 );
 
-export const editProfessional = createAsyncThunk('technology/editProfessional', async (payload) => {
-  const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
-  const response = await fetch(`${apiUrl}/professionals/${payload._id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload.body),
-  });
-  const data = await response.json();
-  if (data.error) {
-    throw new Error(data.message);
-  }
-  return data;
-});
+export const editProfessional = createAsyncThunk(
+  'professionals/editProfessional',
+  async (payload) => {
+    const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
+    const response = await fetch(`${apiUrl}/professionals/${payload._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload.body),
+    });
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(data.message);
+    }
+    return data;
+  },
+);
 
 const professionalSlice = createSlice({
   name: 'professionals',

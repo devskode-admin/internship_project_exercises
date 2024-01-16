@@ -24,6 +24,7 @@ const Technologies = () => {
   const dispatch = useDispatch();
   const technologiesList = useSelector((state) => state.technologies.list);
   const [idState, setIdState] = useState('');
+  const [techState, setTechState] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [alert, setAlert] = useState({
     isOpen: false,
@@ -66,7 +67,7 @@ const Technologies = () => {
   };
 
   const openForm = () => {
-    setIdState('');
+    setTechState('');
     setOpenFormModal(true);
   };
 
@@ -74,8 +75,8 @@ const Technologies = () => {
     <div className={styles.generalContainer}>
       <FormModal
         isOpen={openFormModal}
-        technolgyParam={idState}
-        action={() => setOpenFormModal(false)}
+        technologyParam={techState}
+        handleCloseForm={() => setOpenFormModal(false)}
       />
       <Modal
         isOpen={openDeleteModal}
@@ -115,7 +116,7 @@ const Technologies = () => {
                     <IconButton
                       aria-label="edit"
                       onClick={() => {
-                        setIdState(row);
+                        setTechState(row);
                         setOpenFormModal(true);
                       }}
                     >

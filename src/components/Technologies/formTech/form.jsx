@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import technologySchema from '../../../validations/technologies.js';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-const FormModal = ({ isOpen, action, technolgyParam }) => {
+const FormModal = ({ isOpen, handleCloseForm, technologyParam }) => {
   const [alert, setAlert] = useState({
     isOpen: false,
     message: '',
@@ -26,13 +26,13 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
   } = useForm({ mode: 'onChange', resolver: joiResolver(technologySchema) });
 
   useEffect(() => {
-    if (technolgyParam) {
-      setValue('name', technolgyParam?.name);
-      setValue('development_side', technolgyParam?.development_side);
+    if (technologyParam) {
+      setValue('name', technologyParam?.name);
+      setValue('development_side', technologyParam?.development_side);
     } else {
       reset();
     }
-  }, [action, technolgyParam]);
+  }, [isOpen, technologyParam]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -46,9 +46,9 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
   };
 
   const onSubmit = async (data) => {
-    if (technolgyParam) {
+    if (technologyParam) {
       const payload = {
-        _id: technolgyParam._id,
+        _id: technologyParam._id,
         body: data,
       };
       const response = await dispatch(editTechnology(payload));
@@ -60,7 +60,7 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
         });
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     } else {
       const response = await dispatch(createTechnology(data));
@@ -72,7 +72,7 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
         });
       } else {
         reset();
-        action();
+        handleCloseForm();
       }
     }
   };
@@ -90,13 +90,13 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
             aria-label="cancel"
             onClick={() => {
               reset();
-              action();
+              handleCloseForm();
             }}
           >
             <Close />
           </IconButton>
         </div>
-        <h2 className={styles.title}>{technolgyParam ? 'Edit Technology' : 'Add Technology'}</h2>
+        <h2 className={styles.title}>{technologyParam ? 'Edit Technology' : 'Add Technology'}</h2>
         <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.inputsContainer}>
             <div>
@@ -115,7 +115,7 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
                 select
                 label="Development Side"
                 name="development_side"
-                defaultValue={technolgyParam ? technolgyParam?.development_side : ''}
+                defaultValue={technologyParam ? technologyParam?.development_side : ''}
                 {...register('development_side')}
                 error={!!errors.development_side}
               >
@@ -130,7 +130,7 @@ const FormModal = ({ isOpen, action, technolgyParam }) => {
           </div>
           <div className={styles.buttonCreateContainer}>
             <Button size="large" sx={{ width: 230, height: 45 }} type="submit" variant="contained">
-              {technolgyParam ? 'Edit' : 'Create'}
+              {technologyParam ? 'Edit' : 'Create'}
             </Button>
           </div>
         </form>
