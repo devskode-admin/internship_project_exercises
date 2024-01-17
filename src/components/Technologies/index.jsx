@@ -1,17 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  IconButton,
-  Snackbar,
-  Alert,
-  TableContainer,
-  Button,
-} from '@mui/material';
-import { Close, Edit } from '@mui/icons-material';
+import { Snackbar, Alert, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import styles from './index.module.css';
 import SideBar from '../Shared/SideBar/index.jsx';
@@ -19,6 +7,7 @@ import { getTechnologies, deleteTechnology } from '../../redux/technologySlice.j
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formTech/form.jsx';
+import SharedTable from '../Shared/Table/index.jsx';
 
 const Technologies = () => {
   const dispatch = useDispatch();
@@ -66,9 +55,14 @@ const Technologies = () => {
     }
   };
 
-  const openForm = () => {
-    setTechState('');
+  const handleOpenEditForm = (row) => {
+    setTechState(row);
     setOpenFormModal(true);
+  };
+
+  const handleOpenDeleteModal = (rowId) => {
+    setIdState(rowId);
+    setOpenDeleteModal(true);
   };
 
   return (
@@ -92,64 +86,23 @@ const Technologies = () => {
       <div className={styles.mainContainer}>
         <div className={styles.headerContainer}>
           <h1>Technologies List</h1>
-          <Button aria-label="add" size="small" variant="contained" onClick={openForm}>
+          <Button
+            aria-label="add"
+            size="small"
+            variant="contained"
+            onClick={() => {
+              setTechState('');
+              setOpenFormModal(true);
+            }}
+          >
             Create Technology
           </Button>
         </div>
-        <TableContainer sx={{ maxHeight: 665 }} className={styles.table}>
-          <Table stickyHeader aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ color: '#334d6e88' }}>Name</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Development Side</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {technologiesList?.map((row) => (
-                <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell>{row.development_side}</TableCell>
-                  <TableCell sx={{ paddingTop: 0, paddingBottom: 0 }}>
-                    <IconButton
-                      aria-label="edit"
-                      onClick={() => {
-                        setTechState(row);
-                        setOpenFormModal(true);
-                      }}
-                    >
-                      <Edit
-                        sx={{
-                          color: '#656ED3',
-                          border: '2px solid #656ED3',
-                          borderRadius: '5px',
-                        }}
-                      />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => {
-                        setIdState(row._id);
-                        setOpenDeleteModal(true);
-                      }}
-                    >
-                      <Close
-                        sx={{
-                          backgroundColor: '#D36565',
-                          color: 'white',
-                          border: '1px solid #D36565',
-                          borderRadius: '5px',
-                        }}
-                      />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <SharedTable
+          paramList={technologiesList}
+          actionEditButton={handleOpenEditForm}
+          actionDeleteButton={handleOpenDeleteModal}
+        />
       </div>
     </div>
   );

@@ -1,17 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableContainer,
-  IconButton,
-  Snackbar,
-  Alert,
-  Button,
-} from '@mui/material';
-import { Close, Edit } from '@mui/icons-material';
+import { Snackbar, Alert, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import styles from './index.module.css';
 import SideBar from '../Shared/SideBar/index.jsx';
@@ -19,6 +7,7 @@ import { getProfessionals, deleteProfessional } from '../../redux/professionalSl
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formProfessional/form.jsx';
+import SharedTable from '../Shared/Table/index.jsx';
 
 const Professionals = () => {
   const dispatch = useDispatch();
@@ -66,9 +55,14 @@ const Professionals = () => {
     }
   };
 
-  const openForm = () => {
-    setProfessionalState('');
+  const handleOpenEditForm = (row) => {
+    setProfessionalState(row);
     setOpenFormModal(true);
+  };
+
+  const handleOpenDeleteModal = (rowId) => {
+    setIdState(rowId);
+    setOpenDeleteModal(true);
   };
 
   return (
@@ -92,70 +86,23 @@ const Professionals = () => {
       <div className={styles.mainContainer}>
         <div className={styles.headerContainer}>
           <h1>Professionals List</h1>
-          <Button aria-label="add" size="small" variant="contained" onClick={openForm}>
+          <Button
+            aria-label="add"
+            size="small"
+            variant="contained"
+            onClick={() => {
+              setProfessionalState('');
+              setOpenFormModal(true);
+            }}
+          >
             Create Professional
           </Button>
         </div>
-        <TableContainer sx={{ maxHeight: 665 }} className={styles.table}>
-          <Table stickyHeader aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ color: '#334d6e88' }}>First Name</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Last Name</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Email</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Role</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Module</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {professionalsList?.map((row) => (
-                <TableRow key={row._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="row">
-                    {row.first_name}
-                  </TableCell>
-                  <TableCell>{row.last_name}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.role}</TableCell>
-                  <TableCell>{row.module}</TableCell>
-                  <TableCell sx={{ paddingTop: 0, paddingBottom: 0 }}>
-                    <IconButton
-                      aria-label="edit"
-                      onClick={() => {
-                        setProfessionalState(row);
-                        setOpenFormModal(true);
-                      }}
-                    >
-                      <Edit
-                        sx={{
-                          color: '#656ED3',
-                          border: '2px solid #656ED3',
-                          borderRadius: '5px',
-                        }}
-                      />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => {
-                        setIdState(row._id);
-                        setOpenDeleteModal(true);
-                      }}
-                    >
-                      <Close
-                        sx={{
-                          backgroundColor: '#D36565',
-                          color: 'white',
-                          border: '1px solid #D36565',
-                          borderRadius: '5px',
-                        }}
-                      />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <SharedTable
+          paramList={professionalsList}
+          actionEditButton={handleOpenEditForm}
+          actionDeleteButton={handleOpenDeleteModal}
+        />
       </div>
     </div>
   );
