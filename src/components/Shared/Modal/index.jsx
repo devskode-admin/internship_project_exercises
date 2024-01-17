@@ -2,8 +2,8 @@
 import styles from './index.module.css';
 import { Button } from '@mui/material';
 
-const Modal = ({ isOpen, close, actionDelete }) => {
-  return isOpen ? (
+const Modal = ({ close, actionDelete }) => {
+  return (
     <div className={styles.modalContainer}>
       <div className={styles.container}>
         <img src="/images/circle.png" className={styles.mainIcon} />
@@ -18,8 +18,6 @@ const Modal = ({ isOpen, close, actionDelete }) => {
         </div>
       </div>
     </div>
-  ) : (
-    <></>
   );
 };
 

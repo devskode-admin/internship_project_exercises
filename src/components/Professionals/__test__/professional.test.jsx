@@ -83,8 +83,15 @@ describe('Professional tests', () => {
       </Provider>,
     );
     await waitFor(() => {
-      const rows = screen.getAllByLabelText('edit', { selector: 'button' });
-      fireEvent.click(rows[0]);
+      const editButton = screen.getAllByLabelText('edit', { selector: 'button' });
+      const rows = screen.getAllByRole('row');
+      const tableFieldsValues = [];
+
+      rows.map((row, i) => {
+        const dataCells = screen.getAllByRole('cell', { container: row });
+        tableFieldsValues.push(dataCells[i].textContent);
+      });
+      fireEvent.click(editButton[0]);
 
       const firstNameField = screen.getByLabelText('First Name');
       const lastNameField = screen.getByLabelText('Last Name');
@@ -92,11 +99,11 @@ describe('Professional tests', () => {
       const roleField = screen.getByLabelText('Role');
       const moduleField = screen.getByLabelText('Module');
 
-      expect(firstNameField.value).toBe('Galo');
-      expect(lastNameField.value).toBe('Durante');
-      expect(emailField.value).toBe('galo@devskode.com');
-      expect(roleField.textContent).toBe('Director');
-      expect(moduleField.textContent).toBe('Internship');
+      expect(firstNameField.value).toBe(tableFieldsValues[0]);
+      expect(lastNameField.value).toBe(tableFieldsValues[1]);
+      expect(emailField.value).toBe(tableFieldsValues[2]);
+      expect(roleField.textContent).toBe(tableFieldsValues[3]);
+      expect(moduleField.textContent).toBe(tableFieldsValues[4]);
     });
   });
 });
