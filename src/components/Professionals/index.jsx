@@ -1,4 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
+import styles from './index.module.css';
 import {
   Table,
   TableHead,
@@ -7,62 +11,30 @@ import {
   TableCell,
   TableContainer,
   IconButton,
-  Snackbar,
-  Alert,
   Button,
 } from '@mui/material';
 import { Close, Edit } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
-import styles from './index.module.css';
 import SideBar from '../Shared/SideBar/index.jsx';
-import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
-import { useDispatch, useSelector } from 'react-redux';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formProfessional/form.jsx';
 
 const Professionals = () => {
   const dispatch = useDispatch();
   const professionalsList = useSelector((state) => state.professionals.list);
-  const [idState, setIdState] = useState('');
-  const [professionalState, setProfessionalState] = useState('');
+  const [itemId, setItemId] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    message: '',
-    type: 'success',
-  });
   const [openFormModal, setOpenFormModal] = useState(false);
+  const [professionalState, setProfessionalState] = useState('');
 
   useEffect(() => {
     dispatch(getProfessionals());
   }, []);
 
-  const closeAlert = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlert({
-      isOpen: false,
-      message: alert.message,
-      type: alert.type,
-    });
-  };
-
   const deleteItem = async () => {
-    const response = await dispatch(deleteProfessional(idState));
+    const response = await dispatch(deleteProfessional(itemId));
     setOpenDeleteModal(false);
     if (response.error) {
-      setAlert({
-        isOpen: true,
-        message: response.error.message,
-        type: 'error',
-      });
-    } else {
-      setAlert({
-        isOpen: true,
-        message: response.payload.data.message,
-        type: 'success',
-      });
+      alert(response.error.message);
     }
   };
 
@@ -73,21 +45,15 @@ const Professionals = () => {
 
   return (
     <div className={styles.generalContainer}>
-      <FormModal
-        isOpen={openFormModal}
-        professionalParam={professionalState}
-        handleCloseForm={() => setOpenFormModal(false)}
-      />
-      <Modal
-        isOpen={openDeleteModal}
-        actionDelete={() => deleteItem()}
-        close={() => setOpenDeleteModal(false)}
-      />
-      <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={closeAlert}>
-        <Alert onClose={closeAlert} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      {openFormModal && (
+        <FormModal
+          professionalParam={professionalState}
+          handleCloseForm={() => setOpenFormModal(false)}
+        />
+      )}
+      {openDeleteModal && (
+        <Modal actionDelete={() => deleteItem()} close={() => setOpenDeleteModal(false)} />
+      )}
       <SideBar />
       <div className={styles.mainContainer}>
         <div className={styles.headerContainer}>
@@ -111,7 +77,7 @@ const Professionals = () => {
             <TableBody>
               {professionalsList?.map((row) => (
                 <TableRow key={row._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" scope="row">
                     {row.first_name}
                   </TableCell>
                   <TableCell>{row.last_name}</TableCell>
@@ -137,7 +103,7 @@ const Professionals = () => {
                     <IconButton
                       aria-label="delete"
                       onClick={() => {
-                        setIdState(row._id);
+                        setItemId(row._id);
                         setOpenDeleteModal(true);
                       }}
                     >
