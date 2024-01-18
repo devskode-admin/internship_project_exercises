@@ -2,7 +2,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { store } from '../../../redux/store.js';
 import { Provider } from 'react-redux';
 import { describe, expect, test } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import Professional from '../index.jsx';
 import FormModal from '../formProfessional/form.jsx';
 
@@ -83,8 +83,14 @@ describe('Professional tests', () => {
       </Provider>,
     );
     await waitFor(() => {
-      const rows = screen.getAllByLabelText('edit', { selector: 'button' });
-      fireEvent.click(rows[0]);
+      const editButton = screen.getAllByLabelText('edit', { selector: 'button' });
+      const rows = screen.getAllByRole('row');
+
+      const dataCells = within(rows[1]).getAllByRole('cell');
+      const rowData = dataCells.map((cell) => {
+        return cell.textContent;
+      });
+      fireEvent.click(editButton[0]);
 
       const firstNameField = screen.getByLabelText('First Name');
       const lastNameField = screen.getByLabelText('Last Name');
@@ -92,11 +98,11 @@ describe('Professional tests', () => {
       const roleField = screen.getByLabelText('Role');
       const moduleField = screen.getByLabelText('Module');
 
-      expect(firstNameField.value).toBe('Galo');
-      expect(lastNameField.value).toBe('Durante');
-      expect(emailField.value).toBe('galo@devskode.com');
-      expect(roleField.textContent).toBe('Director');
-      expect(moduleField.textContent).toBe('Internship');
+      expect(firstNameField.value).toBe(rowData[0]);
+      expect(lastNameField.value).toBe(rowData[1]);
+      expect(emailField.value).toBe(rowData[2]);
+      expect(roleField.textContent).toBe(rowData[3]);
+      expect(moduleField.textContent).toBe(rowData[4]);
     });
   });
 });

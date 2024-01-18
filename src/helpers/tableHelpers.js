@@ -2,7 +2,12 @@ const fieldsBlocked = ['_id', '__v', 'createdAt', 'updatedAt', 'password'];
 
 export const getColumnNames = (list) => {
   const fieldNamesFiltered = Object.keys(list).filter((name) => !fieldsBlocked.includes(name));
-  return fieldNamesFiltered.map(transformName);
+
+  return fieldNamesFiltered.map((fieldName) => ({
+    field: fieldName,
+    headerName: transformName(fieldName),
+    width: 190,
+  }));
 };
 
 const transformName = (name) => {

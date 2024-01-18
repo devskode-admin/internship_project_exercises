@@ -1,21 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { TextField, Button, MenuItem, Snackbar, Alert, IconButton } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import styles from './form.module.css';
-import { useEffect, useState } from 'react';
-import { createTechnology, editTechnology } from '../../../redux/technologySlice';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { createTechnology, editTechnology } from '../../../redux/technologySlice';
+import styles from './form.module.css';
+import { TextField, Button, MenuItem, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import technologySchema from '../../../validations/technologies.js';
 import { joiResolver } from '@hookform/resolvers/joi';
 
-const FormModal = ({ isOpen, handleCloseForm, technologyParam }) => {
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    message: '',
-    type: 'success',
-  });
+const FormModal = ({ handleCloseForm, technologyParam }) => {
   const dispatch = useDispatch();
   const {
     register,
@@ -32,18 +27,7 @@ const FormModal = ({ isOpen, handleCloseForm, technologyParam }) => {
     } else {
       reset();
     }
-  }, [isOpen, technologyParam]);
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setAlert({
-      isOpen: false,
-      message: alert.message,
-      type: alert.type,
-    });
-  };
+  }, [technologyParam]);
 
   const onSubmit = async (data) => {
     if (technologyParam) {
@@ -53,11 +37,7 @@ const FormModal = ({ isOpen, handleCloseForm, technologyParam }) => {
       };
       const response = await dispatch(editTechnology(payload));
       if (response.error) {
-        setAlert({
-          isOpen: true,
-          message: response.error.message,
-          type: 'error',
-        });
+        alert(response.error.message);
       } else {
         reset();
         handleCloseForm();
@@ -65,11 +45,7 @@ const FormModal = ({ isOpen, handleCloseForm, technologyParam }) => {
     } else {
       const response = await dispatch(createTechnology(data));
       if (response.error) {
-        setAlert({
-          isOpen: true,
-          message: response.error.message,
-          type: 'error',
-        });
+        alert(response.error.message);
       } else {
         reset();
         handleCloseForm();
@@ -77,13 +53,8 @@ const FormModal = ({ isOpen, handleCloseForm, technologyParam }) => {
     }
   };
 
-  return isOpen ? (
+  return (
     <div className={styles.modalContainer}>
-      <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar>
       <div className={styles.wrapper}>
         <div className={styles.closeIcon}>
           <IconButton
@@ -136,8 +107,6 @@ const FormModal = ({ isOpen, handleCloseForm, technologyParam }) => {
         </form>
       </div>
     </div>
-  ) : (
-    <></>
   );
 };
 
