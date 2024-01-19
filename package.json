@@ -18,6 +18,7 @@
     "@hookform/resolvers": "^3.3.4",
     "@mui/icons-material": "^5.14.11",
     "@mui/material": "^5.14.11",
+    "@mui/x-data-grid": "^6.19.1",
     "@reduxjs/toolkit": "^1.9.6",
     "joi": "^17.11.1",
     "lint-staged": "^15.0.2",
