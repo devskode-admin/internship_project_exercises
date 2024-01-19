@@ -1,21 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Table, TableHead, TableBody, TableRow, TableCell, TableContainer } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
+import {
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  IconButton,
+  TableContainer,
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
 import styles from './index.module.css';
 import SideBar from '../Shared/SideBar/index.jsx';
-import { getProfessionals } from '../../redux/professionalSlice.js';
-import { useDispatch, useSelector } from 'react-redux';
+import ConfirmModal from '../Shared/ConfirmModal/index.jsx';
 
 const Professionals = () => {
   const dispatch = useDispatch();
   const professionalsList = useSelector((state) => state.professionals.list);
+  const [itemId, setItemId] = useState('');
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   useEffect(() => {
     dispatch(getProfessionals());
   }, []);
 
+  const deleteItem = async () => {
+    const response = await dispatch(deleteProfessional(itemId));
+    setOpenDeleteModal(false);
+  };
+
   return (
     <div className={styles.generalContainer}>
+      { openDeleteModal &&
+        <ConfirmModal
+          type='Delete'
+          action={() => deleteItem()}
+          close={() => setOpenDeleteModal(false)}
+        />
+      }
       <SideBar />
       <div className={styles.mainContainer}>
         <h1>Professionals List</h1>
@@ -40,6 +64,24 @@ const Professionals = () => {
                   <TableCell>{row.email}</TableCell>
                   <TableCell>{row.role}</TableCell>
                   <TableCell>{row.module}</TableCell>
+                  <TableCell sx={{ paddingTop: 0, paddingBottom: 0 }}>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => {
+                        setItemId(row._id);
+                        setOpenDeleteModal(true);
+                      }}
+                    >
+                      <Close
+                        sx={{
+                          backgroundColor: '#D36565',
+                          color: 'white',
+                          border: '1px solid #D36565',
+                          borderRadius: '5px',
+                        }}
+                      />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
