@@ -111,13 +111,13 @@ const Professionals = () => {
             <TableBody>
               {professionalsList?.map((row) => (
                 <TableRow key={row._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="row">
+                  <TableCell component="td" data-testid="first_name" scope="row">
                     {row.first_name}
                   </TableCell>
-                  <TableCell>{row.last_name}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.role}</TableCell>
-                  <TableCell>{row.module}</TableCell>
+                  <TableCell data-testid="last_name">{row.last_name}</TableCell>
+                  <TableCell data-testid="email">{row.email}</TableCell>
+                  <TableCell data-testid="role">{row.role}</TableCell>
+                  <TableCell data-testid="module">{row.module}</TableCell>
                   <TableCell sx={{ paddingTop: 0, paddingBottom: 0 }}>
                     <IconButton
                       aria-label="edit"
