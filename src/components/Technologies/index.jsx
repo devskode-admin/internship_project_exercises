@@ -10,73 +10,40 @@ import {
   TableRow,
   TableCell,
   IconButton,
-  // Snackbar,
-  // Alert,
   TableContainer,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import SideBar from '../Shared/SideBar/index.jsx';
-import Modal from './Modal/index.jsx';
+import Modal from '../Shared/Modal/index.jsx';
 
 const Technologies = () => {
   const dispatch = useDispatch();
   const technologiesList = useSelector((state) => state.technologies.list);
-  const [itemId, setItemId] = useState(''); //No es un buen nombre para la variable setIdState
+  const [itemId, setItemId] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  // const [alert, setAlert] = useState({
-  //   isOpen: false,
-  //   message: '',
-  //   type: 'success',
-  // });
 
   useEffect(() => {
     dispatch(getTechnologies());
   }, []);
 
-  // const closeAlert = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-  //   setAlert({
-  //     isOpen: false,
-  //     message: alert.message,
-  //     type: alert.type,
-  //   });
-  // };
-
   const deleteItem = async () => {
     const response = await dispatch(deleteTechnology(itemId));
     setOpenDeleteModal(false);
-
-    // if (response.error) {
-    //   setAlert({
-    //     isOpen: true,
-    //     message: response.error.message,
-    //     type: 'error',
-    //   });
-    // } else {
-    //   setAlert({
-    //     isOpen: true,
-    //     message: response.payload.data.message,
-    //     type: 'success',
-    //   });
-    // }
-
+    if (response.error) {
+      alert(response.error.message);
+    }
   };
 
   return (
     <div className={styles.generalContainer}>
-      { openDeleteModal ?
+      {openDeleteModal && (
         <Modal
-          actionDelete={() => deleteItem()}
+          action={() => deleteItem()}
           close={() => setOpenDeleteModal(false)}
-        /> : ''
-      }
-      {/* <Snackbar open={alert.isOpen} autoHideDuration={3000} onClose={closeAlert}>
-        <Alert onClose={closeAlert} severity={alert.type} sx={{ width: '100%' }}>
-          {alert.message}
-        </Alert>
-      </Snackbar> */}
+          text={'Are you sure you want to delete it?'}
+          isDeleteModal
+        />
+      )}
       <SideBar />
       <div className={styles.mainContainer}>
         <h1>Technologies List</h1>
