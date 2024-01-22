@@ -8,6 +8,7 @@ import SideBar from '../Shared/SideBar/index.jsx';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formProfessional/form.jsx';
 import SharedTable from '../Shared/Table/index.jsx';
+import dataForTable from '../../helpers/tableHelpers.js';
 
 const Professionals = () => {
   const dispatch = useDispatch();
@@ -64,9 +65,9 @@ const Professionals = () => {
           </Button>
         </div>
         <SharedTable
-          paramList={professionalsList}
-          actionEditButton={handleOpenEditForm}
-          actionDeleteButton={handleOpenDeleteModal}
+          data={dataForTable(professionalsList, ['_id', 'password'], true, 'professional')}
+          deleteAction={handleOpenEditForm}
+          editAction={handleOpenDeleteModal}
         />
       </div>
     </div>

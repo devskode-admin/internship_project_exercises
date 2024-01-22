@@ -8,6 +8,7 @@ import SideBar from '../Shared/SideBar/index.jsx';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formTech/form.jsx';
 import SharedTable from '../Shared/Table/index.jsx';
+import dataForTable from '../../helpers/tableHelpers.js';
 
 const Technologies = () => {
   const dispatch = useDispatch();
@@ -66,9 +67,9 @@ const Technologies = () => {
           </Button>
         </div>
         <SharedTable
-          paramList={technologiesList}
-          actionEditButton={handleOpenEditForm}
-          actionDeleteButton={handleOpenDeleteModal}
+          data={dataForTable(technologiesList, ['_id'], true)}
+          deleteAction={handleOpenEditForm}
+          editAction={handleOpenDeleteModal}
         />
       </div>
     </div>
