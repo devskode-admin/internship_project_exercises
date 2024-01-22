@@ -17,7 +17,3 @@ const transformName = (name) => {
     .join(' ');
   return nameTransformed;
 };
-
-export const organiceData = (value) => {
-  return Object.entries(value).filter(([field]) => !fieldsBlocked.includes(field));
-};

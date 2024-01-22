@@ -11,9 +11,10 @@
 
 .wrapper {
   width: 50em;
-  padding: 0 3em 3em;
+  padding: 3em;
   background-color: #fff;
   border-radius: 10px;
+  position: relative;
 }
 
 .title {
@@ -39,11 +40,4 @@
   height: 1rem;
   color: #d32f2f;
   font-size: 0.8em;
-}
-
-.closeIcon {
-  display: flex;
-  justify-content: flex-end;
-  position: relative;
-  right: -46px;
 }

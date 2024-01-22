@@ -1,5 +1,6 @@
+/* eslint-disable max-len */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createTechnology, editTechnology } from '../../../redux/technologySlice';
@@ -10,6 +11,11 @@ import { useForm } from 'react-hook-form';
 import technologySchema from '../../../validations/technologies.js';
 import { joiResolver } from '@hookform/resolvers/joi';
 
+/**
+ * The FormModal is a functional component to be rendered as a form, which allows the creation or editing of a technology.
+ * @param {Function} handleCloseForm is a function to close the form
+ * @param {Object | undefined} technologyParam contains all the row data and is optional depending on which method you want to use
+ */
 const FormModal = ({ handleCloseForm, technologyParam }) => {
   const dispatch = useDispatch();
   const {
@@ -56,17 +62,16 @@ const FormModal = ({ handleCloseForm, technologyParam }) => {
   return (
     <div className={styles.modalContainer}>
       <div className={styles.wrapper}>
-        <div className={styles.closeIcon}>
-          <IconButton
-            aria-label="cancel"
-            onClick={() => {
-              reset();
-              handleCloseForm();
-            }}
-          >
-            <Close />
-          </IconButton>
-        </div>
+        <IconButton
+          sx={{ position: 'absolute', right: '3px', top: '3px' }}
+          aria-label="cancel"
+          onClick={() => {
+            reset();
+            handleCloseForm();
+          }}
+        >
+          <Close />
+        </IconButton>
         <h2 className={styles.title}>{technologyParam ? 'Edit Technology' : 'Add Technology'}</h2>
         <form className={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.inputsContainer}>
@@ -108,6 +113,11 @@ const FormModal = ({ handleCloseForm, technologyParam }) => {
       </div>
     </div>
   );
+};
+
+FormModal.propTypes = {
+  handleCloseForm: PropTypes.func,
+  technologyParam: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 };
 
 export default FormModal;
