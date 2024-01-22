@@ -3,20 +3,11 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
 import styles from './index.module.css';
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableContainer,
-  IconButton,
-  Button,
-} from '@mui/material';
-import { Close, Edit } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import SideBar from '../Shared/SideBar/index.jsx';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formProfessional/form.jsx';
+import SharedTable from '../Shared/Table/index.jsx';
 
 const Professionals = () => {
   const dispatch = useDispatch();
@@ -24,7 +15,7 @@ const Professionals = () => {
   const [itemId, setItemId] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openFormModal, setOpenFormModal] = useState(false);
-  const [professionalState, setProfessionalState] = useState('');
+  const [professionalData, setProfessionalData] = useState('');
 
   useEffect(() => {
     dispatch(getProfessionals());
@@ -39,15 +30,25 @@ const Professionals = () => {
   };
 
   const openForm = () => {
-    setProfessionalState('');
+    setProfessionalData('');
     setOpenFormModal(true);
+  };
+
+  const handleDeleteModal = (id) => {
+    setOpenDeleteModal(true);
+    setItemId(id);
+  };
+
+  const handleEditModal = (row) => {
+    setOpenFormModal(true);
+    setProfessionalData(row);
   };
 
   return (
     <div className={styles.generalContainer}>
       {openFormModal && (
         <FormModal
-          professionalParam={professionalState}
+          professionalParam={professionalData}
           handleCloseForm={() => setOpenFormModal(false)}
         />
       )}
@@ -62,66 +63,11 @@ const Professionals = () => {
             Create Professional
           </Button>
         </div>
-        <TableContainer sx={{ maxHeight: 665 }} className={styles.table}>
-          <Table stickyHeader aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ color: '#334d6e88' }}>First Name</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Last Name</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Email</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Role</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Module</TableCell>
-                <TableCell sx={{ color: '#334d6e88' }}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {professionalsList?.map((row) => (
-                <TableRow key={row._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="td" scope="row">
-                    {row.first_name}
-                  </TableCell>
-                  <TableCell>{row.last_name}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.role}</TableCell>
-                  <TableCell>{row.module}</TableCell>
-                  <TableCell sx={{ paddingTop: 0, paddingBottom: 0 }}>
-                    <IconButton
-                      aria-label="edit"
-                      onClick={() => {
-                        setProfessionalState(row);
-                        setOpenFormModal(true);
-                      }}
-                    >
-                      <Edit
-                        sx={{
-                          color: '#656ED3',
-                          border: '2px solid #656ED3',
-                          borderRadius: '5px',
-                        }}
-                      />
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => {
-                        setItemId(row._id);
-                        setOpenDeleteModal(true);
-                      }}
-                    >
-                      <Close
-                        sx={{
-                          backgroundColor: '#D36565',
-                          color: 'white',
-                          border: '1px solid #D36565',
-                          borderRadius: '5px',
-                        }}
-                      />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <SharedTable
+          rawData={professionalsList}
+          handleDeleteModal={handleDeleteModal}
+          handleEditModal={handleEditModal}
+        />
       </div>
     </div>
   );
