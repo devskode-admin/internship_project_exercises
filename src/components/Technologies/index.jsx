@@ -7,15 +7,16 @@ import { Button } from '@mui/material';
 import SideBar from '../Shared/SideBar/index.jsx';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formTech/form.jsx';
-import SharedTable from '../Shared/Table/index.jsx';
+import Table from './../Shared/Table/DataGridTable/index.jsx';
 
 const Technologies = () => {
   const dispatch = useDispatch();
   const technologiesList = useSelector((state) => state.technologies.list);
-  const [itemId, setItemId] = useState('');
-  const [tech, setTech] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openFormModal, setOpenFormModal] = useState(false);
+  const [itemRow, setItemRow] = useState('');
+  const [itemId, setItemId] = useState('')
+
 
   useEffect(() => {
     dispatch(getTechnologies());
@@ -33,23 +34,13 @@ const Technologies = () => {
     setOpenFormModal(true);
   };
 
-  const handleOpenEditForm = (row) => {
-    setTech(row);
-    setOpenFormModal(true);
-  };
-
-  const handleOpenDeleteModal = (rowId) => {
-    setItemId(rowId);
-    setOpenDeleteModal(true);
-  };
-
   return (
     <div className={styles.generalContainer}>
       {openFormModal && (
         <FormModal
-          technologyParam={tech}
+          technologyParam={itemRow}
           handleCloseForm={() => {
-            setTech('');
+            setItemRow('');
             setOpenFormModal(false);
           }}
         />
@@ -65,10 +56,12 @@ const Technologies = () => {
             Create Technology
           </Button>
         </div>
-        <SharedTable
-          paramList={technologiesList}
-          actionEditButton={handleOpenEditForm}
-          actionDeleteButton={handleOpenDeleteModal}
+        <Table
+          rawData={technologiesList}
+          setOpenDeleteModal={setOpenDeleteModal}
+          setOpenFormModal={setOpenFormModal}
+          setItemRow={setItemRow}
+          setItemId={setItemId}
         />
       </div>
     </div>

@@ -36,7 +36,7 @@ const FormModal = ({ handleCloseForm, professionalParam }) => {
   const onSubmit = async (data) => {
     if (professionalParam) {
       const payload = {
-        _id: professionalParam._id,
+        _id: professionalParam.id,
         body: data,
       };
       const response = await dispatch(editProfessional(payload));

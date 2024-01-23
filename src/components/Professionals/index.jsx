@@ -3,19 +3,20 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfessionals, deleteProfessional } from '../../redux/professionalSlice.js';
 import styles from './index.module.css';
-import { Button } from '@mui/material';
+import { Button} from '@mui/material';
 import SideBar from '../Shared/SideBar/index.jsx';
 import Modal from '../Shared/Modal/index.jsx';
 import FormModal from './formProfessional/form.jsx';
-import SharedTable from '../Shared/Table/index.jsx';
+import Table from './../Shared/Table/DataGridTable/index.jsx';
 
 const Professionals = () => {
   const dispatch = useDispatch();
   const professionalsList = useSelector((state) => state.professionals.list);
-  const [itemId, setItemId] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openFormModal, setOpenFormModal] = useState(false);
-  const [professionalState, setProfessionalState] = useState('');
+  const [itemRow, setItemRow] = useState('');
+  const [itemId, setItemId] = useState('');
+
 
   useEffect(() => {
     dispatch(getProfessionals());
@@ -30,26 +31,19 @@ const Professionals = () => {
   };
 
   const openForm = () => {
-    setProfessionalState('');
+    setItemRow('');
     setOpenFormModal(true);
-  };
-
-  const handleOpenEditForm = (row) => {
-    setProfessionalState(row);
-    setOpenFormModal(true);
-  };
-
-  const handleOpenDeleteModal = (rowId) => {
-    setItemId(rowId);
-    setOpenDeleteModal(true);
   };
 
   return (
     <div className={styles.generalContainer}>
       {openFormModal && (
         <FormModal
-          professionalParam={professionalState}
-          handleCloseForm={() => setOpenFormModal(false)}
+          professionalParam={itemRow}
+          handleCloseForm={() => {
+            setItemRow('');
+            setOpenFormModal(false);
+          }}
         />
       )}
       {openDeleteModal && (
@@ -63,10 +57,12 @@ const Professionals = () => {
             Create Professional
           </Button>
         </div>
-        <SharedTable
-          paramList={professionalsList}
-          actionEditButton={handleOpenEditForm}
-          actionDeleteButton={handleOpenDeleteModal}
+        <Table
+          rawData={professionalsList}
+          setOpenDeleteModal={setOpenDeleteModal}
+          setOpenFormModal={setOpenFormModal}
+          setItemRow={setItemRow}
+          setItemId={setItemId}
         />
       </div>
     </div>

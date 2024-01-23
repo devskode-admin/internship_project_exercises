@@ -32,7 +32,7 @@ const FormModal = ({ handleCloseForm, technologyParam }) => {
   const onSubmit = async (data) => {
     if (technologyParam) {
       const payload = {
-        _id: technologyParam._id,
+        _id: technologyParam.id,
         body: data,
       };
       const response = await dispatch(editTechnology(payload));
