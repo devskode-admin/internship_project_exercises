@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useEffect } from 'react';
@@ -9,6 +10,12 @@ import { Close } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import professionalSchema from '../../../validations/professionals.js';
 import { joiResolver } from '@hookform/resolvers/joi';
+
+/**
+ * The FormModal is a functional component to be rendered as a form, which allows the creation or editing of a professional.
+ * @param {Function} handleCloseForm is a function to close the form
+ * @param {Object | undefined} professionalParam contains all the row data and is optional depending on which method you want to use
+*/
 
 const FormModal = ({ handleCloseForm, professionalParam }) => {
   const dispatch = useDispatch();

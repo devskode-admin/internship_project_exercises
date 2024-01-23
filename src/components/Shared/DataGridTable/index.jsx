@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { DataGrid } from '@mui/x-data-grid';
@@ -5,6 +6,13 @@ import { Box, IconButton } from '@mui/material';
 import { getColumnNames } from '../../../helpers/tableHelpers';
 import { useState, useEffect } from 'react';
 import { Close, Edit } from '@mui/icons-material';
+
+/**
+ * The DataGridTable is a functional component that renders a shared Table, which allows the view of professionals and technologies.
+ * @param {Array} paramList It expects an array of objects to display in the table.
+ * @param {Function} actionEditButton is a function to open the edit modal of an entity within the table.
+ * @param {Function} actionDeleteButton is a function to open the delete modal of an entity within the table.
+ */
 
 const DataGridTable = ({ paramList, actionEditButton, actionDeleteButton }) => {
   const [columnNames, setColumnNames] = useState([]);
