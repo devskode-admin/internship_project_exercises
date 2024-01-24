@@ -16,7 +16,7 @@ import {
 import { Close } from '@mui/icons-material';
 import SideBar from '../Shared/SideBar';
 import ConfirmModal from '../Shared/ConfirmModal';
-import FormModal from './FormTech';
+import FormTechnology from './FormTech';
 
 const Technologies = () => {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const Technologies = () => {
 
   return (
     <div className={styles.generalContainer}>
-      {openFormModal && <FormModal handleCloseForm={() => setOpenFormModal(false)} />}
+      {openFormModal && <FormTechnology handleCloseForm={() => setOpenFormModal(false)} />}
       {openDeleteModal && (
         <ConfirmModal
           type="Delete"

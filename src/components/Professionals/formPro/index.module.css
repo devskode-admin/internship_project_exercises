@@ -1,0 +1,43 @@
+.modalContainer {
+  background-color: #00000033;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.wrapper {
+  width: 50em;
+  padding: 3em;
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+}
+
+.title {
+  font-size: 1.5em;
+  margin-bottom: 1.5em;
+  font-weight: 500;
+  color: #656ed3;
+}
+
+.formContainer {
+  display: grid;
+  grid-template-rows: repeat(2, 2fr);
+  gap: 2em;
+}
+
+.inputsContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 2fr);
+  gap: 3em;
+}
+
+.buttonCreateContainer {
+  margin-top: 2em;
+  display: flex;
+  justify-content: flex-end;
+}
