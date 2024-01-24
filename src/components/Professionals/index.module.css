@@ -16,6 +16,12 @@
   font-weight: 600;
 }
 
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .headerColumn {
   color: #334d6e88;
 }

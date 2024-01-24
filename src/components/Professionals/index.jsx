@@ -11,16 +11,19 @@ import {
   TableCell,
   IconButton,
   TableContainer,
+  Button,
 } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import SideBar from '../Shared/SideBar';
 import ConfirmModal from '../Shared/ConfirmModal';
+import FormModal from './FormProfessional';
 
 const Professionals = () => {
   const dispatch = useDispatch();
   const professionalsList = useSelector((state) => state.professionals.list);
   const [itemId, setItemId] = useState('');
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openFormModal, setOpenFormModal] = useState(false);
 
   useEffect(() => {
     dispatch(getProfessionals());
@@ -38,6 +41,7 @@ const Professionals = () => {
 
   return (
     <div className={styles.generalContainer}>
+      {openFormModal && <FormModal handleCloseForm={() => setOpenFormModal(false)} />}
       {openDeleteModal && (
         <ConfirmModal
           type="Delete"
@@ -47,7 +51,17 @@ const Professionals = () => {
       )}
       <SideBar />
       <div className={styles.mainContainer}>
-        <h1>Professionals List</h1>
+        <div className={styles.headerContainer}>
+          <h1>Professionals List</h1>
+          <Button
+            aria-label="add"
+            size="small"
+            variant="contained"
+            onClick={() => setOpenFormModal(true)}
+          >
+            Create Technology
+          </Button>
+        </div>
         <TableContainer sx={{ maxHeight: 665 }} className={styles.table}>
           <Table stickyHeader aria-label="simple table">
             <TableHead>
